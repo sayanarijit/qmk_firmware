@@ -23,7 +23,7 @@
 
 #define SPAM_DELAY 5000  // 5000 milliseconds between spams
 
-bool spam_active = false;
+bool spam_active = true;
 uint32_t spam_timer = 0;
 
 enum layers {
@@ -71,14 +71,6 @@ const uint16_t ARROW_KEYS[4] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case LOOPKEY:  // When you press custom SPAM keycode
-      if (record->event.pressed) {
-        spam_active = !spam_active;  // Toggle spamming
-        spam_timer = timer_read32(); // Reset spam timer
-      }
-      break;
-  }
   return true;
 }
 
