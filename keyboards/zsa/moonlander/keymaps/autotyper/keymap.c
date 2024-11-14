@@ -66,6 +66,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
+const uint16_t ARROW_KEYS[4] = {
+    KC_UP, KC_DOWN, KC_LEFT, KC_RIGHT
+};
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case LOOPKEY:  // When you press custom SPAM keycode
@@ -78,12 +82,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+int get_random_number(int min, int max) {
+  return rand() % (max - min + 1) + min;
+}
+
 void matrix_scan_user(void){
   if (spam_active) {
     // Check if it's been SPAM_DELAY milliseconds since the last spam
-    if (timer_elapsed32(spam_timer) > SPAM_DELAY) {
-      tap_code(KC_UP);
-      tap_code(KC_DOWN);
+    if (timer_elapsed32(spam_timer) > get_random_number(SPAM_DELAY, SPAM_DELAY * 2)) {
+
+      uint16_t arrow_key = ARROW_KEYS[get_random_number(0, 3)];
+      tap_code(arrow_key);
       spam_timer = timer_read32();  // Reset spam timer
     }
   }
