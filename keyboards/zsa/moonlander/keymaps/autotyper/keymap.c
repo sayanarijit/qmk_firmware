@@ -21,9 +21,7 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 
-#define SPAM_DELAY 5000  // 5000 milliseconds between spams
-
-bool spam_active = true;
+int spam_delay = 0;
 uint32_t spam_timer = 0;
 
 enum layers {
@@ -79,13 +77,11 @@ int get_random_number(int min, int max) {
 }
 
 void matrix_scan_user(void){
-  if (spam_active) {
     // Check if it's been SPAM_DELAY milliseconds since the last spam
-    if (timer_elapsed32(spam_timer) > get_random_number(SPAM_DELAY, SPAM_DELAY * 2)) {
-
+    if (timer_elapsed32(spam_timer) > spam_delay) {
       uint16_t arrow_key = ARROW_KEYS[get_random_number(0, 3)];
       tap_code(arrow_key);
+      spam_delay = get_random_number(5000, 15000);
       spam_timer = timer_read32();  // Reset spam timer
     }
-  }
 }
